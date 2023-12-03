@@ -74,13 +74,21 @@ const readLinesFromFileHandler = async fileHandler => {
   let arrOfLines = [];
 
   for await (const line of fileHandler.readLines()) {
-    arrOfLines.push(sumTwoNumbers(getDigitsFromLine(extractNumsFromLine(line))));
+    let updatedLine = line.replace('twone', 'twoone');
+    updatedLine = updatedLine.replace('nineight', 'nineeight')
+    updatedLine = updatedLine.replace('fiveight', 'fiveeight')
+    updatedLine = updatedLine.replace('threeight', 'threeeight')
+    updatedLine = updatedLine.replace('eightwo', 'eighttwo')
+    updatedLine = updatedLine.replace('eighthree', 'eightthree')
+    updatedLine = updatedLine.replace('oneight', 'oneeight')
+    updatedLine = updatedLine.replace('zerone', 'zeroone')
+    arrOfLines.push(sumTwoNumbers(getDigitsFromLine(extractNumsFromLine(updatedLine))));
   }
 
   return arrOfLines;
 }
 
-const sumTwoNumbers = arrOfNumbers => arrOfNumbers.reduce((acc, curr) => parseInt(acc + curr), 0);
+const sumTwoNumbers = arrOfNumbers => arrOfNumbers.reduce((acc, curr) => `${acc}${curr}`);
 
 const extractNumsFromLine = line => {
   const characters = line.split("");
@@ -131,8 +139,8 @@ const calibrateTextFile = async pathToFile => {
   if(!pathToFile) throw new Error("aint no file ther bitch");
   const file = await createFileHandler(pathToFile);
   const linesFromFile = await readLinesFromFileHandler(file)
-  file.close();
-  return linesFromFile.reduce((acc, curr) => acc + curr, 0);
+  closeFileHandler(file);
+  return linesFromFile.reduce((acc, curr) => parseInt(acc) + parseInt(curr), 0);
 }
 
 
@@ -141,3 +149,4 @@ const calibrateTextFile = async pathToFile => {
 calibrateTextFile("../data.txt")
 .then((sum) => console.log({sum}))
 .catch(err => console.error(err));
+
