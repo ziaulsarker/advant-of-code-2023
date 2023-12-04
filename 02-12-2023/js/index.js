@@ -28,6 +28,12 @@
 
 import * as fs from 'node:fs/promises';
 
+const validator = {
+  red: 12,
+  green: 13,
+  blue: 14,
+}
+
 
 // returns the file handler
 const createFileHandler = async pathToFile => {
@@ -72,18 +78,46 @@ const parseLines = async lines => {
 }
 
 
+const valdateGames = async gameDetails => {
+    if (!gameDetails.size) return;
+
+    for await (const [key, rounds] of gameDetails) {
+
+      rounds.forEach(round => {
+        let options = round.split(",");
+
+        options.forEach(option => {
+          let colorNumber = option.replace(/[^\d]/g, '');
+          let [_, color] = option.split(colorNumber);
+
+          if(color === 'red' && colorNumber > 12) {
+            gameDetails.delete(key)
+          }
+
+          if(color === 'green' && colorNumber > 13) {
+            gameDetails.delete(key)
+          }
+
+          if(color === 'blue' && colorNumber > 14) {
+            gameDetails.delete(key)
+          }
+        })
+        
+      })
+    }
+
+    return [...gameDetails.keys()].map(game => game.replace('Game', '')).reduce((acc, curr) => parseInt(acc) + parseInt(curr), 0)
+
+}
+
+
 const findGamesTotal = async (pathTofile) => {
   const file = await createFileHandler(pathTofile);
   const lines = await readLinesFromFileHandler(file);
-
   const parsedLines = await parseLines(lines);
+  const gamesWithWinnes = await valdateGames(parsedLines);
 
-  return parsedLines;
-
-  // const gamesWithWinnes = await valdateGames(parseLines);
-
-
-  return lines;
+  return gamesWithWinnes;
 }
 
 
