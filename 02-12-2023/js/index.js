@@ -95,39 +95,39 @@ const parseLines = async lines => {
 
 
 const valdateGames = async gameDetails => {
-    if (!gameDetails.size) return;
-    let sum = 0;
+  if (!gameDetails.size) return;
+  let sum = 0;
 
 
-    for await (const [key, rounds] of gameDetails) {
-      let tracker = {
-        red: 0,
-        blue: 0,
-        green: 0
-      };
+  for await (const [key, rounds] of gameDetails) {
+    let tracker = {
+      red: 0,
+      blue: 0,
+      green: 0
+    };
 
 
 
-      rounds.forEach(round => {
-        let options = round.split(",");
+    rounds.forEach(round => {
+      let options = round.split(",");
 
 
-        options.forEach(option => {
-          let colorNumber = parseInt(option.replace(/[^\d]/g, ''));
-          let [_, color] = option.split(colorNumber);
+      options.forEach(option => {
+        let colorNumber = parseInt(option.replace(/[^\d]/g, ''));
+        let [_, color] = option.split(colorNumber);
 
-          tracker[color] = Math.max(tracker[color], colorNumber)
-        })
-        
+        tracker[color] = Math.max(tracker[color], colorNumber)
       })
+      
+    })
 
-      gameDetails.set(key, Object.values(tracker).reduce((acc, curr) => acc * curr));
-    }
+    gameDetails.set(key, Object.values(tracker).reduce((acc, curr) => acc * curr));
+  }
 
-    console.log({ gameDetails})
-    return [...gameDetails.values()].reduce((acc, curr) => acc + curr, 0)
+  return [...gameDetails.values()].reduce((acc, curr) => acc + curr, 0)
 
-}
+};
+
 
 
 const findGamesTotal = async (pathTofile) => {
@@ -135,6 +135,7 @@ const findGamesTotal = async (pathTofile) => {
   const lines = await readLinesFromFileHandler(file);
   const parsedLines = await parseLines(lines);
   const gamesWithWinnes = await valdateGames(parsedLines);
+  file.close();
   return gamesWithWinnes;
 }
 
