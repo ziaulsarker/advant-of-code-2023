@@ -59,8 +59,18 @@ const readLinesFromFileHandler = async fileHandler => {
   return arrOfLines;
 }
 
-const parseLines = async lines => {
-  console.log(lines);
+const parseLines = lines => {
+  const result = [];
+  // console.log(lines);
+  for (let i = 0; i < lines.length; i++) {
+    let line = lines[i];
+
+    for(let j = i + 1; j < lines.length; j++) {
+      console.log()
+    }
+  }
+
+  return result
 }
 
 
@@ -70,7 +80,10 @@ const findSumOfEngineParts = async filePath => {
   const file = await createFileHandler(filePath);
   const lines = await readLinesFromFileHandler(file)
   parseLines(lines)
-  console.log({lines: lines});
+
+
+
+
 
   file?.close?.();
   return 0;
